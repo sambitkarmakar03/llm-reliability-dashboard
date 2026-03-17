@@ -29,11 +29,15 @@ def run_model(prompt):
     start_time = time.time()
 
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama3-70b-8192",
         messages=[
-            {"role": "user", "content": prompt}
+            {
+                "role": "user",
+                "content": prompt
+            }
         ],
-        temperature=0.3
+        temperature=0.3,
+        max_tokens=256
     )
 
     response = completion.choices[0].message.content
@@ -41,7 +45,6 @@ def run_model(prompt):
     latency = time.time() - start_time
 
     return response, latency
-
 # ---------------------------
 # SEMANTIC SIMILARITY
 # ---------------------------
