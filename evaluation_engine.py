@@ -28,12 +28,19 @@ def run_model(prompt):
 
     start_time = time.time()
 
-    response = "Model execution not available in cloud deployment."
+    completion = client.chat.completions.create(
+        model="llama3-8b-8192",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.3
+    )
+
+    response = completion.choices[0].message.content
 
     latency = time.time() - start_time
 
     return response, latency
-
 
 # ---------------------------
 # SEMANTIC SIMILARITY
