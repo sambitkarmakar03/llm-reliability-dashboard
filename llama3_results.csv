@@ -1,0 +1,310 @@
+Prompt,Reference,Model_Response,Similarity,Evidence,Consistency,Latency,Final_Score
+What is the capital of Japan?,Tokyo,The capital of Japan is Tokyo ().,0.7007536888122559,0.8709813356399536,0.9870784878730774,9.941,0.826
+What is the capital of France?,Paris,The capital of France is Paris.,0.7253358960151672,0.781851053237915,1.0000001192092896,5.234,0.803
+What is the capital of Canada?,Ottawa,The capital of Canada is Ottawa.,0.7702113389968872,0.8870070576667786,0.9999999403953552,7.462,0.863
+What is the capital of Australia?,Canberra,The capital of Australia is Canberra.,0.8166012763977051,0.8691259622573853,0.9999999403953552,5.598,0.874
+What is the capital of Germany?,Berlin,The capital of Germany is Berlin.,0.757104754447937,0.7858996391296387,1.0,3.193,0.817
+Which is the largest country by area?,Russia,"The largest country in the world by land area is Russia, covering approximately 17.1 million square kilometers (6.6 million square miles). It spans across much of northern Eurasia and shares borders with several countries, including Norway, Finland, Estonia, Latvia, Lithuania, Belarus, Ukraine, Poland",0.4492153227329254,0.8296617865562439,0.9432892203330994,6.986,0.7
+Which ocean is the largest?,Pacific Ocean,"The Pacific Ocean is the largest of the five oceans, covering an area of approximately 155.6 million square kilometers (60.1 million square miles). It's also the deepest ocean, with a maximum depth of about 11,022 meters (36,198 feet) in the Mariana T",0.5978135466575623,0.6154912710189819,0.9495150446891785,8.246,0.675
+Which desert is the largest hot desert?,Sahara Desert,"The largest hot desert in the world is the Sahara Desert, located in North Africa. It covers an area of approximately 9,200,000 square kilometers (3,552,000 square miles), which is about 3,000 miles (4,800 km) from west to east and up",0.6297432780265808,0.8578184247016907,0.9603700637817383,6.639,0.787
+Which river is the longest in the world?,Nile River,"The longest river in the world is the Nile River, located in northeastern Africa. It stretches approximately 6,853 kilometers (4,258 miles) from its sources in Burundi and Rwanda to its delta on the Mediterranean Sea in Egypt.
+
+The Nile flows through 11 countries: Tanzania, Uganda,",0.6209595203399658,0.6583343148231506,0.9977536201477051,4.966,0.711
+Mount Everest lies in which mountain range?,Himalayas,"Mount Everest, also known as Chomolungma or Sagarmatha, is located in the Himalayan mountain range. Specifically, it is situated on the border between Nepal and Tibet, China. The Himalayas are a major mountain range in Asia, stretching across several countries including India, Pakistan,",0.6624749898910522,0.8399044275283813,0.8798267245292664,4.484,0.777
+Which country has the largest population?,China,"As of 2021, the country with the largest population is China, with a population of over 1.44 billion people. The United Nations estimates that China's population will continue to grow, but at a slower rate, and is expected to reach a peak of around 1.46 billion",0.39646780490875244,0.6739898324012756,0.9697845578193665,6.807,0.622
+Which continent is the Sahara Desert located in?,Africa,"The Sahara Desert is located on the continent of Africa. It covers a vast area of approximately 9,200,000 square kilometers (3,552,000 sq mi) across several countries, including Algeria, Chad, Egypt, Libya, Mali, Mauritania, Morocco, Niger, and Tunisia.",0.4458315074443817,0.8148910999298096,0.9767385125160217,7.679,0.7
+What is 12 multiplied by 8?,96,"Easy one!
+
+12 × 8 = 96",0.5239683389663696,0.2016240954399109,0.9136168360710144,2.654,0.473
+What is the square root of 144?,12,The square root of 144 is 12.,0.3954220414161682,0.29842835664749146,1.0,2.392,0.478
+Solve for x: 2x + 6 = 14,x = 4,"Let's solve for x:
+
+2x + 6 = 14
+
+Subtract 6 from both sides:
+
+2x = 8
+
+Divide both sides by 2:
+
+x = 4
+
+So, the value of x is 4!",0.6171798706054688,0.17084243893623352,1.000000238418579,5.972,0.515
+What is 15 percent of 200?,30,"To find 15% of 200, you can multiply 200 by 0.15.
+
+200 x 0.15 = 30
+
+So, 15% of 200 is 30.",0.24866428971290588,0.03691092133522034,0.9858618378639221,4.697,0.311
+What is the value of pi approximately?,3.1416,"Pi (π) is an irrational number, which means it cannot be expressed as a finite decimal or fraction. However, it has been calculated to over 31.4 trillion digits using advanced computer algorithms and mathematical techniques.
+
+The approximate value of pi is:
+
+3.141592653589793238462",0.5172376036643982,0.8295986652374268,0.9286827445030212,4.857,0.724
+What is the cube of 5?,125,"The cube of 5, also known as 5 to the power of 3 or 5^3, is:
+
+5 × 5 × 5 = 125",0.30743974447250366,0.6599463224411011,0.9545906186103821,3.156,0.578
+What is 7 squared?,49,"Easy one!
+
+7 squared, or 7², is equal to:
+
+7 × 7 = 49",0.30269303917884827,0.19711101055145264,0.9576004147529602,2.85,0.391
+What is the derivative of x^2?,2x,"The derivative of x^2 is 2x.
+
+In general, if you have a function f(x) = x^n, where n is an integer, then its derivative is:
+
+f'(x) = nx^(n-1)
+
+So, in this case, since n=2, the",0.31858354806900024,0.4793474078178406,0.8096358180046082,4.693,0.481
+What is the integral of 1/x?,ln(x),"A classic one!
+
+The integral of 1/x is a logarithmic function. Specifically:
+
+∫(1/x) dx = ln|x| + C
+
+where C is the constant of integration.
+
+In other words, the antiderivative (or indefinite integral) of 1/x with respect to",0.48500949144363403,0.5279901027679443,0.9202749133110046,5.099,0.589
+What is 100 divided by 4?,25,"Easy one!
+
+100 divided by 4 is... 25!",0.36225223541259766,0.5,1.0000001192092896,2.629,0.545
+What gas do humans breathe out?,Carbon dioxide,"Humans breathe in oxygen (O2) and breathe out carbon dioxide (CO2). The process is called respiration. Here's a brief overview:
+
+1. **Inhalation**: We inhale oxygen-rich air into our lungs, which is mostly composed of nitrogen (N2), oxygen (O",0.48385757207870483,0.4632110595703125,0.807357132434845,4.807,0.54
+What is the chemical symbol for water?,H2O,"The chemical symbol for water is H2O. This represents one molecule of water, which consists of two hydrogen atoms (H) and one oxygen atom (O).",0.5527452230453491,0.46223703026771545,0.9916133880615234,3.144,0.604
+What planet is known as the Red Planet?,Mars,"The planet known as the ""Red Planet"" is Mars.",0.630678653717041,0.512513279914856,1.0000001192092896,1.987,0.657
+What is the speed of light approximately?,299792458 meters per second,"The speed of light in vacuum (also known as the ""vacuum speed"" or ""c"") is approximately:
+
+**299,792,458 meters per second** (m/s)
+
+Or:
+
+**186,282 miles per second** (mi/s)
+
+Or:
+
+**approximately 67,796,",0.6069322824478149,0.5,0.8971309065818787,4.684,0.622
+What force pulls objects toward Earth?,Gravity,"The force that pulls objects toward the Earth is called gravity. Gravity is a natural phenomenon that arises from the interaction between two objects with mass (like the Earth and an object on its surface). The more massive the objects, the stronger the gravitational pull.
+
+In our solar system, the Earth's mass is",0.5950185060501099,0.3537622094154358,0.9334492087364197,5.979,0.566
+What part of the cell contains genetic material?,Nucleus,"The part of the cell that contains genetic material is called the nucleus. The nucleus is a membrane-bound organelle found in most eukaryotic cells, including humans, animals, and plants.
+
+Within the nucleus, there is another structure called chromatin, which is made up of DNA (de",0.6233479976654053,0.47603657841682434,0.9422995448112488,4.797,0.628
+What gas do plants absorb from the atmosphere?,Carbon dioxide,"Plants absorb carbon dioxide (CO2) from the atmosphere. They use a process called photosynthesis to convert CO2, water, and light energy into glucose (a type of sugar) and oxygen. This process is essential for plant growth and development.
+
+In addition to carbon dioxide, plants also absorb",0.49800464510917664,0.5,0.8576930165290833,5.728,0.571
+What is the boiling point of water at sea level?,100 degrees Celsius,"The boiling point of water at sea level, which is the standard atmospheric pressure, is 100 degrees Celsius (°C) or 212 degrees Fahrenheit (°F). This is also known as the normal boiling point of water.",0.45417213439941406,0.6598701477050781,0.9610166549682617,4.354,0.638
+What is the freezing point of water?,0 degrees Celsius,The freezing point of water is 32 degrees Fahrenheit (°F) or 0 degrees Celsius (°C).,0.6141394376754761,0.5065874457359314,0.9670938849449158,3.552,0.642
+Which organ pumps blood in the human body?,Heart,"The heart is the organ that pumps blood in the human body. It plays a crucial role in circulating oxygenated and deoxygenated blood throughout the body, ensuring that all organs and tissues receive the necessary nutrients and oxygen. The heart pumps approximately 2,000 gallons of blood every day!",0.4649263024330139,0.8031364679336548,0.9145743250846863,4.985,0.69
+Which planet is the largest in the solar system?,Jupiter,"The largest planet in our solar system is Jupiter. It is the fifth planet from the Sun and is the biggest of all the planets in terms of both mass and size. It has a diameter of approximately 142,984 kilometers (88,846 miles), which is more than 11 times wider than",0.5106026530265808,0.8528248071670532,0.9250208735466003,4.77,0.73
+Which particle carries a negative charge?,Electron,"The particles that carry a negative charge are:
+
+1. **Electrons** (e-): These are the negatively charged particles that orbit the nucleus of an atom.
+2. **Muons** (μ-): Muons are subatomic particles similar to electrons, but they have a slightly larger mass",0.49205106496810913,0.5,0.8755640983581543,4.691,0.572
+Who wrote Romeo and Juliet?,William Shakespeare,"Romeo and Juliet was written by William Shakespeare. It is one of his most famous tragedies, and it has been widely performed and adapted since its first publication in 1597. The play tells the story of two young lovers from feuding families who fall in love and ultimately die in each other",0.47134408354759216,0.7317709922790527,0.9524319171905518,8.335,0.672
+Who was the first President of the United States?,George Washington,"The first President of the United States was George Washington. He was inaugurated on April 30, 1789 and served two terms in office until March 4, 1797. Washington was a military leader during the American Revolutionary War and is considered one of the founding fathers of the United States",0.5446915626525879,0.8798581957817078,0.9965242743492126,6.519,0.769
+In which year did World War II end?,1945,"World War II ended on September 2, 1945, when Japan formally surrendered to the Allied Powers on board the USS Missouri in Tokyo Bay, Japan. This marked the end of the war in the Pacific and the final victory of the Allies.
+
+However, it's worth noting that the war in",0.505645215511322,0.7072577476501465,0.8589264750480652,6.944,0.657
+Who discovered penicillin?,Alexander Fleming,"Penicillin was discovered by Scottish scientist Alexander Fleming in 1928. Fleming was a biologist, pharmacologist, and botanist who worked at St. Mary's Hospital in London. He was studying the bacteria Streptococcus pneumoniae when he observed that one of his bacterial cultures had been",0.5547727346420288,0.7993538975715637,0.9437060356140137,6.559,0.73
+Who painted the Mona Lisa?,Leonardo da Vinci,"The Mona Lisa was painted by the Italian artist Leonardo da Vinci. He created the painting in the early 16th century, specifically between 1503 and 1506. The painting is also known as ""La Gioconda"" and is one of the most famous works of art in the world.",0.5805463194847107,0.7378467321395874,0.8895995020866394,6.06,0.705
+Which ancient civilization built the pyramids?,Ancient Egyptians,"The ancient civilization that built the pyramids is the Old Kingdom of Ancient Egypt. The pyramids were constructed during the reigns of several pharaohs, including Khufu (also known as Cheops), Khafre (also known as Chephren), and Menkaure (also known",0.5609729290008545,0.37964367866516113,0.8386467099189758,6.413,0.544
+Who was known as the Maid of Orleans?,Joan of Arc,"The ""Maid of Orléans"" is a nickname referring to Joan of Arc, a French heroine who led the French army to several victories during the Hundred Years' War. She was born in 1412 and died at the age of 19 in 1431.
+
+Joan of",0.6210045218467712,0.5,0.9518397450447083,6.33,0.639
+Who invented the telephone?,Alexander Graham Bell,"The invention of the telephone is a story that involves several individuals and a bit of controversy. While Alexander Graham Bell is often credited with inventing the first practical telephone, there were others who worked on similar devices around the same time.
+
+Alexander Graham Bell was a Scottish-born inventor and scientist who developed the first",0.515183687210083,0.34349778294563293,0.9167477488517761,5.604,0.527
+Who was the first man to walk on the Moon?,Neil Armstrong,"The first men to walk on the Moon were Neil Armstrong and Edwin ""Buzz"" Aldrin. They landed on July 20, 1969 as part of the Apollo 11 mission.
+
+Neil Armstrong stepped out of the lunar module Eagle and onto the Moon's surface at 2:56 UTC on",0.4694318175315857,0.6505257487297058,0.898021936416626,5.197,0.628
+Which empire was ruled by Julius Caesar?,Roman Empire,"Julius Caesar was the Roman dictator who ruled the Roman Republic, not an empire. However, he did play a significant role in transforming the Roman Republic into the Roman Empire.
+
+At the time of Caesar's rise to power, Rome was a republic, governed by a system of elected representatives and assemblies.",0.5279325246810913,0.6787758469581604,0.8354488015174866,5.951,0.65
+Who founded Microsoft?,Bill Gates,"Microsoft was founded on April 4, 1975, by Bill Gates and Paul Allen. At the time, the company was called ""Micro-Soft,"" a combination of the words ""microcomputer"" and ""software."" The hyphen was later dropped, and the company became known simply as Microsoft",0.37647318840026855,0.6868436336517334,0.8510059714317322,4.911,0.596
+What does CPU stand for?,Central Processing Unit,"CPU stands for Central Processing Unit. It's the primary component of a computer that executes most instructions that a computer program requires. The CPU is responsible for performing calculations, controlling data flow, and handling input/output operations. In other words, it's the ""brain"" of your computer!",0.4170841574668884,0.2976325452327728,0.9692051410675049,4.389,0.48
+What does HTTP stand for?,Hypertext Transfer Protocol,"HTTP stands for HyperText Transfer Protocol. It's a protocol used for transferring data, including web pages, over the internet.",0.5874585509300232,0.5160276889801025,0.9791731238365173,3.051,0.637
+What programming language is commonly used for machine learning?,Python,"There are several programming languages that are commonly used for machine learning, depending on the specific application and personal preference. Some of the most popular ones include:
+
+1. **Python**: Python has become a de facto standard for machine learning due to its simplicity, flexibility, and extensive libraries like NumPy, Sci",0.48882079124450684,0.5389012098312378,0.9399097561836243,5.664,0.599
+Who founded Tesla?,Elon Musk,"Tesla, Inc. was founded in 2003 by Elon Musk, JB Straubel, Martin Eberhard, and Marc Tarpenning. However, the company has undergone several significant changes since its founding.
+
+In 2002, Martin Eberhard and Marc Tarpenning co-founded Tesla",0.3801349103450775,0.6619828939437866,0.9106786847114563,5.132,0.599
+What does RAM stand for?,Random Access Memory,"RAM stands for Random Access Memory. It's a type of computer memory that temporarily stores data and applications while the CPU (Central Processing Unit) processes them. Think of it like a workspace on your desk where you can quickly grab or put away papers as needed. When the CPU needs to access information,",0.5069427490234375,0.5,0.9324715733528137,6.016,0.589
+Which company developed the iPhone?,Apple,"The iPhone was developed by Apple Inc., a multinational technology company headquartered in Cupertino, California. The first generation iPhone was announced by Steve Jobs, the co-founder and CEO of Apple at the time, on January 9, 2007, and it was released to the public on June 29,",0.46543997526168823,0.47741469740867615,0.9120925068855286,6.768,0.56
+What does GPU stand for?,Graphics Processing Unit,"GPU stands for Graphics Processing Unit. It's a specialized electronic circuit designed to quickly manipulate and alter memory to accelerate the creation of images by a computer. In other words, it's a chip that helps your computer render graphics and perform complex calculations, such as those required for gaming, video editing, ",0.5589649081230164,0.48994749784469604,0.9861261248588562,5.694,0.617
+Which language is used for styling web pages?,CSS,"The language most commonly used for styling web pages is Cascading Style Sheets (CSS). It's a styling language that allows you to control the layout, appearance, and behavior of web pages written in HTML or XML. CSS is used to define styles for elements such as text, colors, fonts, layouts",0.4760650396347046,0.7331883311271667,0.9837989211082458,6.989,0.68
+Which protocol secures web communication?,HTTPS,"The most common protocols used to secure web communication are:
+
+1. **HTTPS (Hypertext Transfer Protocol Secure)**: This is a protocol that uses an encryption mechanism called TLS (Transport Layer Security) or SSL (Secure Sockets Layer) to provide end-to-end security for web communications. HTTPS ensures",0.46564316749572754,0.791288435459137,0.9714357256889343,6.419,0.697
+If a car travels 60 km per hour for 3 hours how far does it travel?,180 km,"A simple one!
+
+Let's break it down:
+
+Distance = Speed × Time
+= 60 km/hour × 3 hours
+= 180 kilometers
+
+So, the car travels 180 kilometers.",0.541786789894104,0.20067663490772247,0.8372388482093811,6.235,0.464
+If you have 10 apples and give away 4 how many remain?,6,"Easy one!
+
+You start with 10 apples and give away 4, so:
+
+10 - 4 = 6
+
+You have 6 apples remaining!",0.4305068254470825,-0.023015514016151428,0.9455546736717224,4.529,0.352
+"If a triangle has angles 90, 45 and 45 what type is it?",Right triangle,"A nice trigonometry question!
+
+Given that the angles are 90, 45, and 45, we can identify the shape as a:
+
+**Right Isoceles Triangle**
+
+The name ""isoceles"" comes from the Greek words ""isos"" (equal) and ""celes""",0.5458984375,0.5,0.8313450813293457,9.699,0.585
+If 5 machines make 5 parts in 5 minutes how long for 100 machines to make 100 parts?,5 minutes,"A classic lateral thinking puzzle!
+
+The answer is not ""100 minutes"" because the number of machines doesn't affect the time it takes each machine to produce a part. Each machine still takes the same amount of time to make one part.
+
+So, if 5 machines take 5 minutes to make ",0.4323289394378662,0.5,0.8033149838447571,5.439,0.534
+If today is Monday what day will it be in 3 days?,Thursday,"Easy one!
+
+If today is Monday, then:
+
+* Tomorrow (1 day) would be Tuesday
+* The next day (2 days) would be Wednesday
+* And the day after that (3 days) would be Thursday!",0.4613268971443176,0.05886004865169525,0.9671218991279602,6.621,0.401
+If a rectangle has length 10 and width 5 what is the area?,50,"The formula for the area of a rectangle is:
+
+Area = Length × Width
+
+In this case, the length is 10 and the width is 5, so:
+
+Area = 10 × 5
+= 50
+
+So, the area of the rectangle is 50 square units.",0.18751226365566254,0.2723156809806824,0.8787293434143066,9.148,0.36
+If a train travels 50 km in 1 hour how far in 4 hours?,200 km,"Since the train travels 50 km in 1 hour, to find out how far it will travel in 4 hours, you can multiply the distance traveled per hour by the number of hours:
+
+Distance = Distance per hour x Number of hours
+= 50 km/hour x 4 hours
+",0.3563097417354584,0.21995675563812256,0.9409317970275879,6.604,0.419
+If the perimeter of a square is 20 what is its side length?,5,"That's an easy one!
+
+Since a square has four sides, and the perimeter is given as 20, we can divide the perimeter by 4 to find the side length:
+
+20 ÷ 4 = 5
+
+So, the side length of the square is 5 units.",0.19750270247459412,0.09809155762195587,0.791864812374115,5.775,0.277
+If you double 8 what do you get?,16,"If you double 8, you would get... (drumroll please)... 16!",0.4671843349933624,-0.0769650936126709,0.9332539439201355,2.2,0.343
+If a dozen eggs cost 12 dollars what is the price per egg?,1 dollar,"That's an easy one!
+
+Since there are 12 eggs in a dozen, we can divide the total cost of $12 by 12 to find the price per egg:
+
+$12 ÷ 12 = $1 per egg
+
+So, the price per egg is $1.",0.29969316720962524,0.10400928556919098,0.9552832245826721,4.853,0.353
+What is photosynthesis?,Process by which plants convert sunlight into chemical energy,"Photosynthesis is the process by which plants, algae, and some bacteria convert light energy from the sun into chemical energy in the form of organic compounds, such as glucose. This process occurs in specialized organelles called chloroplasts within plant cells.
+
+The overall equation for photosynthesis is:
+
+6 CO",0.781024694442749,0.8944637775421143,0.9415556788444519,5.04,0.859
+What is gravity?,Force that attracts objects with mass toward each other,"Gravity! One of the most fundamental forces in our universe.
+
+Gravity is a natural phenomenon that causes objects with mass to attract each other. The more massive the objects, the stronger the gravitational pull between them. Gravity is what keeps us on the ground, what makes things fall, and what holds planets in",0.46011340618133545,0.6307729482650757,0.9075464606285095,5.239,0.618
+What is machine learning?,Field of AI where computers learn patterns from data,"Machine learning (ML) is a subfield of artificial intelligence (AI) that involves training algorithms to make predictions or take actions based on data, without being explicitly programmed. In other words, ML enables machines to learn from experience and improve their performance over time.
+
+Here's how it works:
+
+1.",0.4833480417728424,0.5292551517486572,0.9916055798530579,6.299,0.603
+What is artificial intelligence?,Simulation of human intelligence in machines,"Artificial Intelligence (AI) refers to the development of computer systems that can perform tasks that typically require human intelligence, such as:
+
+1. Learning: AI systems can learn from data and improve their performance over time.
+2. Reasoning: AI systems can draw conclusions based on rules, patterns, and",0.5255448818206787,0.6183075904846191,0.9775402545928955,6.688,0.653
+What is a black hole?,Region of spacetime with gravity so strong that nothing escapes,"A black hole is a region in space where the gravitational pull is so strong that nothing, including light, can escape. It's formed when a massive star collapses in on itself and its gravity becomes so strong that it warps the fabric of spacetime around it.
+
+Here's how it happens:
+
+1",0.47186732292175293,0.8183577656745911,0.9199449419975281,7.395,0.7
+What is DNA?,Molecule carrying genetic information,"DNA, or deoxyribonucleic acid, is a molecule that contains the genetic instructions used in the development and function of all living organisms. It's often referred to as the ""building blocks of life"" because it carries the genetic information necessary for the growth, reproduction, and survival of cells",0.5558582544326782,0.7718282341957092,0.9322609901428223,6.646,0.718
+What is an algorithm?,Step by step procedure to solve a problem,"An algorithm is a set of instructions that is used to solve a specific problem or perform a particular task. It's a step-by-step procedure that takes some input data, processes it, and produces output based on a set of rules.
+
+Think of an algorithm like a recipe for your computer. Just as",0.215329110622406,0.4372633397579193,0.9605634808540344,5.455,0.453
+What is cloud computing?,Delivery of computing services over the internet,"Cloud computing is a model of delivering computing services over the internet, where resources such as servers, storage, databases, software, and applications are provided as a service to users on-demand. Instead of having to manage and maintain physical hardware and software, users can access these resources remotely and use them as needed",0.5967200994491577,0.7372668981552124,0.9785801768302917,5.136,0.729
+What is the internet?,Global network of interconnected computers,"A question that gets to the very fabric of modern life!
+
+The internet is a global network of interconnected computers and servers that communicate with each other using standardized protocols. It's a vast, decentralized system that allows users to access, share, and exchange information, as well as connect with others across the globe",0.5018481612205505,0.4556069076061249,0.8731198310852051,4.717,0.558
+What is blockchain?,Distributed ledger technology for secure transactions,"Blockchain is a distributed digital ledger technology that allows multiple parties to record and verify transactions, data, or assets in a secure, transparent, and decentralized manner. It's the underlying technology behind cryptocurrencies like Bitcoin, Ethereum, and others.
+
+Here's how it works:
+
+1. **Decentralized network**:",0.4821717143058777,0.837145209312439,0.9077727198600769,5.738,0.709
+Who was the president of the United States in 1785?,There was no US president in 1785,"There was no President of the United States in 1785. The Continental Congress, which was the governing body of the newly independent colonies, had not yet established a presidential system.
+
+In fact, the Constitution that established the office of the President did not go into effect until September 17, 178",0.8574079275131226,0.5261596441268921,0.8706149458885193,4.89,0.728
+What is the capital of the fictional country Wakanda?,Wakanda is fictional,"Wakanda is a fictional nation in the Marvel Comics universe and is not a real country. However, according to the Marvel Cinematic Universe (MCU) movie ""Black Panther"" (2018), the capital city of Wakanda is Wakanda City.",0.6642541289329529,0.4153434932231903,0.9137296676635742,4.823,0.615
+Who invented the electric spoon in 1889?,No known inventor,"I think there may be a small issue here!
+
+As far as I can tell, there is no record of an ""electric spoon"" being invented in 1889 or at any other time. Spoons are typically simple utensils used for eating and serving food, and they haven't undergone significant technological",0.37355148792266846,0.5,0.9546340107917786,4.398,0.54
+What is the capital city of Atlantis?,Atlantis is mythical,"I'm afraid that's a trick question! There is no evidence to support the existence of Atlantis, a mythological place described by ancient Greek philosopher Plato in his dialogues Timaeus and Critias. According to Plato, Atlantis was a powerful and advanced civilization that existed in the distant past, but",0.7575931549072266,0.5,0.911790132522583,5.72,0.685
+Who discovered the planet Vulcan in 1915?,Planet Vulcan does not exist,"There is no credible evidence that a planet called Vulcan was discovered in 1915 or at any other time. In fact, the concept of a hypothetical planet Vulcan has been largely discredited as a mythical construct.
+
+The idea of Vulcan originated from observations of Mercury's orbit, which appeared to be affected by",0.668617844581604,0.5,0.9015326499938965,5.542,0.648
+Which scientist discovered gravity in 1805?,Gravity was not discovered in 1805,"I think there may be some misinformation here!
+
+Gravity was not discovered in 1805 or by any specific scientist. Gravity is a fundamental force of nature that has been studied and understood for centuries.
+
+Sir Isaac Newton (1643-1727) is credited with developing the theory of universal gravitation,",0.825545072555542,0.11381810903549194,0.8908788561820984,5.942,0.554
+What year was the invisible city of Eloria founded?,Eloria is fictional,"I'm happy to help! However, I must inform you that there is no such thing as an ""invisible city"" called Eloria. It's possible that you may be thinking of a fictional place or a mythological concept. Could you please clarify or provide more context about where you heard about El",0.7055833339691162,0.5,0.958909273147583,5.093,0.674
+Who wrote the book Shadows of Jupiter in 1750?,No such book exists,"There is no book titled ""Shadows of Jupiter"" written in 1750 or any other year. The planet Jupiter has been a source of fascination for scientists and astronomers throughout history, but I couldn't find any evidence of a book with this title being published in the 18th century or at",0.4020589590072632,0.5,0.939541757106781,5.029,0.549
+Which country owns the Moon?,No country owns the Moon,"A question that sparks debate and intrigue!
+
+The short answer is: no one owns the Moon. According to international law, the Moon is not owned by any country or entity. It is a celestial body that is considered part of the public domain.
+
+In 1967, the United States and the Soviet",0.808565080165863,0.016222912818193436,0.8896293640136719,5.332,0.508
+Which company invented teleportation technology?,Teleportation technology does not exist,"I'm afraid you've been misinformed! Teleportation, in the sense of moving an object or person from one location to another without crossing the space in between, is currently not possible with our current understanding of physics and technology.
+
+There are some theoretical concepts and proposals for teleporting information,",0.7665260434150696,0.5,0.9420976638793945,5.011,0.695
+What is the exact number of stars in the universe?,Unknown,"A question that has puzzled humans for centuries!
+
+Unfortunately, it's impossible to give an exact number of stars in the universe. The reason lies in the sheer scale and complexity of the universe itself.
+
+Here are a few reasons why we can't count every star:
+
+1. **The universe is vast**:",0.02924390882253647,0.008582551032304764,0.8215687870979309,5.292,0.179
+How many grains of sand exist on Earth?,Unknown,"What a fascinating question!
+
+Estimating the number of grains of sand on Earth is a challenging task, as it's constantly changing due to natural processes like erosion and sedimentation. However, scientists have made various estimates based on available data and mathematical models.
+
+One commonly cited estimate comes from the United States Geological",0.07077673822641373,0.5,0.9554391503334045,5.114,0.419
+What will be the population of Earth in 3000?,Unknown,"A question that's both fascinating and challenging!
+
+Predicting the exact population of Earth in 3000 is extremely difficult, if not impossible. However, I can provide some context and insights to help you understand the uncertainties involved.
+
+The United Nations Department of Economic and Social Affairs Population Division provides a medium-",0.08983881771564484,0.5,0.9148774147033691,5.489,0.419
+Which person will live the longest in the future?,Unknown,"What a fascinating question! While it's impossible to predict with certainty, I can provide some insights based on current trends and advancements in medicine.
+
+The record for human longevity is held by Jeanne Calment, who lived to 122 years and 164 days. However, this exceptional case was likely influenced",0.09450944513082504,0.5,0.7444076538085938,5.279,0.387
+When will humans colonize another galaxy?,Unknown,"What a fascinating question! Colonizing another galaxy is a daunting task that requires significant technological advancements, societal changes, and understanding of the vast distances involved. While it's impossible to predict exactly when humans might colonize another galaxy, I can provide some context and insights based on current scientific knowledge.
+
+**Ch",0.01958175003528595,0.5,0.6232172846794128,5.747,0.332
+What is the exact number of trees on Earth right now?,Unknown,"A great question! Unfortunately, it's challenging to provide an exact count of trees on Earth at this moment. The number of trees has been estimated and modeled by scientists, but it's constantly changing due to factors like deforestation, reforestation, natural regeneration, and habitat destruction.
+
+However, I",-0.008700643666088581,-0.07857226580381393,0.9311677813529968,5.385,0.151
+Which language will dominate the world in 500 years?,Unknown,"What a fascinating question!
+
+Predicting which language will dominate the world in 500 years is extremely challenging, if not impossible. Language evolution and globalization are influenced by numerous factors, including cultural exchange, technological advancements, economic power, and historical events.
+
+That being said, let's consider some current trends:
+
+",0.080412358045578,0.5,0.9610891938209534,5.234,0.424
+Which company will be the richest in 2100?,Unknown,"What a fascinating question!
+
+Predicting the future is always challenging, but I'll provide some insights based on current trends and developments. Keep in mind that this is purely speculative, and actual events may differ.
+
+By 2100, it's likely that many companies will have evolved or transformed beyond recognition.",0.09616830945014954,0.5,0.8398041725158691,5.05,0.406
+Which city will be the largest in 2200?,Unknown,"What a great question!
+
+Predicting the future is always challenging, as it depends on many factors such as technological advancements, climate change, urban planning, and societal shifts. However, based on current trends and forecasts, I can give you some insights.
+
+According to various sources, including city population estimates and",0.0808066725730896,0.5,0.6259447932243347,4.195,0.358
+What technology will replace the internet?,Unknown,"It's likely that no single technology will entirely replace the internet, as it has become an integral part of modern life. However, several emerging technologies may complement or augment the internet in various ways:
+
+1. Quantum Internet: A quantum internet is a network that utilizes quantum entanglement and superposition to",0.03184434026479721,0.5,0.8632591366767883,4.28,0.385
