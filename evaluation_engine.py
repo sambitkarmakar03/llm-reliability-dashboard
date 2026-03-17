@@ -34,7 +34,7 @@ def run_model(prompt):
     try:
         start_time = time.time()
         completion = client.chat.completions.create(
-            model="mixtral-8x7b-32768",          # You can also try "mixtral-8x7b-32768"
+            model="llama-3.3-70b-versatile",          # You can also try "mixtral-8x7b-32768"
             messages=[{"role": "user", "content": prompt}],
             temperature=0.3,
             max_tokens=256
