@@ -24,6 +24,14 @@ except ImportError:
     st.error("❌ 'transformers' package not found.")
     st.stop()
 
+# Check for matplotlib and provide fallback
+try:
+    import matplotlib
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    st.warning("⚠️ matplotlib not installed. Gradient styling will be disabled. Run: pip install matplotlib")
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="LLM Reliability Analyzer",
@@ -310,12 +318,16 @@ if "df" in st.session_state:
     k5.metric("Avg H-Penalty",    f"{df['H_Penalty'].mean():.3f}")
 
     st.markdown("#### All Results")
-    st.dataframe(
-        df.style.background_gradient(subset=["Final Score"], cmap="RdYlGn")
-                .background_gradient(subset=["H_Penalty"],   cmap="Reds"),
-        use_container_width=True,
-        height=480,
-    )
+    
+    # Apply styling only if matplotlib is available
+    if MATPLOTLIB_AVAILABLE:
+        styled_df = df.style.background_gradient(subset=["Final Score"], cmap="RdYlGn")
+        styled_df = styled_df.background_gradient(subset=["H_Penalty"], cmap="Reds")
+        st.dataframe(styled_df, use_container_width=True, height=480)
+    else:
+        # Display without gradient styling
+        st.dataframe(df, use_container_width=True, height=480)
+        st.info("💡 Install matplotlib to enable gradient coloring: `pip install matplotlib`")
 
     col_a, col_b = st.columns(2)
     with col_a:
