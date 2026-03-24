@@ -5,6 +5,25 @@ import pandas as pd
 import warnings
 warnings.filterwarnings("ignore")
 
+# ── Top-level imports — avoids ModuleNotFoundError inside cached functions ────
+try:
+    from groq import Groq
+except ImportError:
+    st.error("❌ 'groq' package not found. Check requirements.txt and reboot the app.")
+    st.stop()
+
+try:
+    from sentence_transformers import SentenceTransformer
+except ImportError:
+    st.error("❌ 'sentence-transformers' package not found.")
+    st.stop()
+
+try:
+    from transformers import pipeline as hf_pipeline
+except ImportError:
+    st.error("❌ 'transformers' package not found.")
+    st.stop()
+
 # ── Page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="LLM Reliability Analyzer",
@@ -18,27 +37,27 @@ st.markdown(
     "Hallucination** metrics — fully serverless, no Ollama needed."
 )
 
-# ── Groq client (cached) ──────────────────────────────────────────────────────
-@st.cache_resource(show_spinner="Connecting to Groq…")
+# ── Groq client ───────────────────────────────────────────────────────────────
 def get_groq_client():
-    from groq import Groq
     api_key = st.secrets.get("GROQ_API_KEY", "")
     if not api_key:
-        st.error("❌ GROQ_API_KEY not found in Streamlit secrets. See sidebar for setup instructions.")
+        st.error(
+            "❌ GROQ_API_KEY not found in Streamlit secrets.\n\n"
+            "Go to **Manage app → Settings → Secrets** and add:\n"
+            "```toml\nGROQ_API_KEY = \"gsk_xxxx\"\n```"
+        )
         st.stop()
     return Groq(api_key=api_key)
 
 
-# ── Lazy model loading ────────────────────────────────────────────────────────
+# ── Cached model loading ──────────────────────────────────────────────────────
 @st.cache_resource(show_spinner="Loading embedding model…")
 def load_embedding_model():
-    from sentence_transformers import SentenceTransformer
     return SentenceTransformer("all-MiniLM-L6-v2")
 
 
 @st.cache_resource(show_spinner="Loading NLI model…")
 def load_nli_pipeline():
-    from transformers import pipeline as hf_pipeline
     return hf_pipeline(
         "text-classification",
         model="roberta-large-mnli",
@@ -47,7 +66,7 @@ def load_nli_pipeline():
     )
 
 
-# ── Cosine similarity (pure numpy) ───────────────────────────────────────────
+# ── Cosine similarity ─────────────────────────────────────────────────────────
 def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
     norm = np.linalg.norm(a) * np.linalg.norm(b)
     if norm < 1e-8:
@@ -58,21 +77,18 @@ def cosine_similarity(a: np.ndarray, b: np.ndarray) -> float:
 # ── Reference retrieval ───────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False, ttl=3600)
 def get_automated_reference(prompt: str):
-    """Returns (reference_text, is_verified)."""
     try:
         from duckduckgo_search import DDGS
         with DDGS() as ddgs:
             results = list(ddgs.text(prompt, max_results=1, timeout=5))
             if results:
-                snippet = f"{results[0]['title']}: {results[0]['body']}"
-                return snippet, True
+                return f"{results[0]['title']}: {results[0]['body']}", True
     except Exception:
         pass
     try:
         import socket, wikipedia
         socket.setdefaulttimeout(5)
-        text = wikipedia.summary(prompt, sentences=2)
-        return text, True
+        return wikipedia.summary(prompt, sentences=2), True
     except Exception:
         pass
     return "No verifiable reference found.", False
@@ -83,33 +99,30 @@ def check_hallucination_penalty(response: str, reference: str, nli) -> float:
     if not reference or "No verifiable reference" in reference:
         return 0.0
     try:
-        premise    = reference[:400]
-        hypothesis = response[:200]
-        result = nli(f"{premise} [SEP] {hypothesis}", truncation=True)[0]
+        result = nli(f"{reference[:400]} [SEP] {response[:200]}", truncation=True)[0]
         label  = result["label"].upper()
         score  = result["score"]
         if label == "CONTRADICTION":
             return score * 0.9
         elif label == "NEUTRAL":
             return score * 0.2
-        else:
-            return 0.0
+        return 0.0
     except Exception:
         return 0.1
 
 
 # ── Groq query ────────────────────────────────────────────────────────────────
 def run_model(prompt: str, model_name: str, temperature: float = 0.8):
-    client = get_groq_client()
+    client = get_groq_client()          # plain function call, no caching
     start  = time.time()
     try:
-        chat_completion = client.chat.completions.create(
+        completion = client.chat.completions.create(
             messages=[{"role": "user", "content": prompt}],
             model=model_name,
             temperature=temperature,
             max_tokens=120,
         )
-        text = chat_completion.choices[0].message.content.strip()
+        text = completion.choices[0].message.content.strip()
     except Exception as e:
         text = f"[Groq error: {e}]"
     return text, time.time() - start
@@ -225,7 +238,7 @@ with st.sidebar:
     st.markdown("---")
     st.subheader("🔑 Secrets setup")
     st.markdown(
-        "In **Streamlit Cloud → App settings → Secrets**, add:\n"
+        "In **Streamlit Cloud → Manage app → Settings → Secrets**, add:\n"
         "```toml\n"
         'GROQ_API_KEY = "gsk_xxxxxxxxxxxx"\n'
         "```\n"
