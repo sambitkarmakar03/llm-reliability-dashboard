@@ -608,11 +608,11 @@ else:
     
     ### 💡 Tips:
     - Leave reference blank for automatic web search
-     - Use 2-3 response samples for better consistency scores
+    - Use 2-3 response samples for better consistency scores
     - Lower temperature (0.3-0.5) for more factual responses
     - Higher temperature (0.8-1.0) for creative responses
     
-    ### 🔑 API Key Setup:
-    Add your Groq API key to Streamlit secrets:
-    ```toml
-    GROQ_API_KEY = "gsk_xxxxxxxxxxxx"
+    # ### 🔑 API Key Setup:
+    # Add your Groq API key to Streamlit secrets:
+    # ```toml
+    # GROQ_API_KEY = "gsk_xxxxxxxxxxxx"
