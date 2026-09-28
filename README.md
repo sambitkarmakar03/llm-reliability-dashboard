@@ -507,3 +507,9 @@ To use an ML estimator for live scoring, the API would need to load a compatible
 - **Model and dependency compatibility matters:** Pin and test package versions, especially for Transformers, PyTorch, Sentence Transformers, and any serialized model artifacts.
 - **Do not expose an unauthenticated deployment publicly:** Add appropriate authentication, request limits, logging controls, and operational safeguards before production use.
 
+<<<<<<< HEAD
+## License
+
+Add the license applicable to this repository before distributing or publishing it.
+=======
+>>>>>>> f837311b2552487c7abb613821486a3efb9ab41d

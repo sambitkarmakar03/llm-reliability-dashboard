@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reliability Engine — Test Console</title>
+<style>
+  :root{
+    --bg:#090d13; --panel:#10161f; --panel-2:#141b26; --border:#202b38;
+    --text:#dbe2e9; --muted:#7c8a99; --faint:#4f5b68;
+    --accent:#5fe3c0;
+    --red:#ef5350; --red-dim:#3a1f20;
+    --yellow:#d9a441; --yellow-dim:#3a3120;
+    --green:#4cc38a;
+    --mono:'SF Mono','JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg); color:var(--text); font-family:var(--sans);
+    height:100vh; height:100dvh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  code{font-family:var(--mono);background:rgba(255,255,255,.08);padding:0 4px;border-radius:3px;font-size:.92em;}
+
+  /* ---------- Header ---------- */
+  header{
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    padding:14px 24px; border-bottom:1px solid var(--border); flex-shrink:0;
+  }
+  header h1{font-size:17px;font-weight:600;margin:0;letter-spacing:.2px;}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--accent);margin-right:10px;box-shadow:0 0 8px var(--accent);}
+  .dot.checking{background:var(--faint);box-shadow:none;animation:pulse 1.2s ease-in-out infinite;}
+  .dot.online{background:var(--green);box-shadow:0 0 8px var(--green);}
+  .dot.offline{background:var(--red);box-shadow:0 0 8px var(--red);}
+  @keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+  .endpoint{font-family:var(--mono);font-size:12px;color:var(--muted);cursor:pointer;}
+
+  /* ---------- Three-column full-width layout ---------- */
+  .layout{
+    flex:1; min-height:0; display:grid; gap:20px; padding:20px 24px;
+    grid-template-columns:minmax(300px,.8fr) minmax(360px,1.2fr) minmax(400px,1.2fr);
+  }
+  .col{min-height:0; overflow-y:auto; padding-right:4px; scrollbar-width:thin; scrollbar-color:var(--border) transparent;}
+  .col-title{
+    font-family:var(--mono); font-size:12px; font-weight:600; color:var(--text);
+    margin:0 0 12px; padding-bottom:10px; border-bottom:1px solid var(--border);
+  }
+  @media (max-width:1180px){
+    body{height:auto;overflow:auto;}
+    .layout{display:block;}
+    .col{overflow:visible;margin-bottom:28px;padding-right:0;}
+  }
+
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:20px;}
+
+  /* ---------- Form ---------- */
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-family:var(--mono);}
+  textarea,input[type=text]{
+    width:100%; background:var(--panel-2); border:1px solid var(--border); border-radius:4px;
+    color:var(--text); font-family:var(--sans); font-size:14px; padding:10px 12px; resize:vertical;
+    transition:border-color .15s;
+  }
+  textarea:focus,input[type=text]:focus{outline:none;border-color:var(--accent);}
+  textarea{min-height:110px;line-height:1.5;}
+  .field{margin-bottom:16px;}
+  button.run{
+    width:100%; background:var(--accent); color:#052620; border:none; border-radius:4px;
+    font-family:var(--mono); font-weight:600; font-size:13px; padding:12px; cursor:pointer;
+    transition:filter .12s, transform .05s;
+  }
+  button.run:hover{filter:brightness(1.08);}
+  button.run:active{transform:scale(.99);}
+  button.run:disabled{background:var(--panel-2);color:var(--faint);cursor:not-allowed;}
+  button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+  .hint{font-size:11px;color:var(--faint);margin-top:6px;font-family:var(--mono);}
+
+  /* ---------- History ---------- */
+  .history-title{font-family:var(--mono);font-size:11px;color:var(--muted);margin:22px 0 10px;padding-top:18px;border-top:1px solid var(--border);}
+  .trend-block{margin-bottom:14px;}
+  .trend-block svg{display:block;width:100%;height:auto;}
+  .history-item{padding:10px;border-radius:4px;cursor:pointer;border:1px solid transparent;margin-bottom:6px;}
+  .history-item:hover{background:var(--panel-2);border-color:var(--border);}
+  .h-prompt{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .h-meta{display:flex;gap:8px;align-items:center;margin-top:4px;}
+  .h-score{font-family:var(--mono);font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid currentColor;}
+  .h-time{font-size:11px;color:var(--faint);font-family:var(--mono);}
+  .empty-history{color:var(--faint);font-size:13px;font-family:var(--mono);}
+
+  /* ---------- Placeholder / loading / errors ---------- */
+  .placeholder{display:flex;align-items:center;justify-content:center;text-align:center;min-height:240px;padding:16px;color:var(--faint);font-family:var(--mono);font-size:13px;border:1px dashed var(--border);border-radius:6px;}
+  .loading{display:flex;align-items:center;gap:12px;min-height:240px;justify-content:center;color:var(--muted);font-family:var(--mono);font-size:13px;text-align:center;}
+  .spinner{width:16px;height:16px;flex-shrink:0;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .error-banner{background:var(--red-dim);border:1px solid var(--red);color:#ffb4b0;border-radius:6px;padding:14px 16px;font-size:14px;margin-bottom:18px;line-height:1.5;}
+  .error-banner strong{color:#ff8f89;}
+  .error-banner.warn{border-color:var(--yellow);background:var(--yellow-dim);color:#f0d9a3;}
+  .error-banner.warn strong{color:var(--yellow);}
+
+  /* ---------- Read more ---------- */
+  .clamp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:var(--lines,3);overflow:hidden;}
+  .clamp.open{display:block;-webkit-line-clamp:unset;}
+  .more-btn{
+    background:none;border:none;color:var(--accent);font-family:var(--mono);font-size:12px;
+    padding:6px 0 0;cursor:pointer;
+  }
+  .more-btn:hover{text-decoration:underline;}
+
+  /* ---------- Answer ---------- */
+  .answer-block{background:var(--panel-2);border:1px solid var(--border);border-radius:6px;padding:18px;margin-bottom:22px;}
+  .answer-block.declined{border-color:var(--yellow);}
+  .answer-flag{display:inline-block;font-family:var(--mono);font-size:11px;color:var(--yellow);background:var(--yellow-dim);padding:3px 8px;border-radius:3px;margin-bottom:12px;}
+  .answer-text{font-size:16px;line-height:1.6;white-space:pre-wrap;}
+  .model-said{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.5;white-space:pre-wrap;}
+  .model-said .label{font-family:var(--mono);font-size:11px;color:var(--faint);display:block;margin-bottom:4px;}
+
+  /* ---------- Evidence ---------- */
+  .section-label{font-family:var(--mono);font-size:11px;color:var(--muted);margin:0 0 12px;}
+  .section-label span{color:var(--faint);}
+  .evidence-card{background:var(--panel-2);border:1px solid var(--border);border-radius:5px;padding:14px 16px;margin-bottom:12px;}
+  .evidence-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;}
+  .evidence-card a{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600;word-break:break-all;}
+  .evidence-card a:hover{text-decoration:underline;}
+  .evidence-domain{font-family:var(--mono);font-size:11px;color:var(--faint);}
+  .evidence-text{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.55;}
+  .evidence-score{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;}
+  .evidence-bar-track{width:100%;height:4px;background:var(--panel);border-radius:2px;margin-top:6px;overflow:hidden;}
+  .evidence-bar-fill{height:100%;border-radius:2px;}
+  .no-evidence{color:var(--faint);font-family:var(--mono);font-size:13px;padding:16px;text-align:center;border:1px dashed var(--border);border-radius:5px;}
+
+  /* ---------- Metrics ---------- */
+  .metrics-grid{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center;margin-bottom:22px;}
+  .score-dial{width:112px;height:112px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;border:4px solid var(--border);}
+  .score-dial .val{font-family:var(--mono);font-size:28px;font-weight:700;}
+  .score-dial .lbl{font-family:var(--mono);font-size:9px;color:var(--muted);margin-top:2px;}
+  .score-red{border-color:var(--red);} .score-red .val{color:var(--red);}
+  .score-yellow{border-color:var(--yellow);} .score-yellow .val{color:var(--yellow);}
+  .score-green{border-color:var(--green);} .score-green .val{color:var(--green);}
+  .score-na .val{color:var(--faint);font-size:16px;}
+  .sub-scores{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .sub-score{background:var(--panel-2);border:1px solid var(--border);border-radius:4px;padding:10px 12px;}
+  .s-label{font-family:var(--mono);font-size:10px;color:var(--muted);display:block;margin-bottom:6px;}
+  .s-value{font-family:var(--mono);font-size:17px;font-weight:600;}
+  .s-value.na{color:var(--faint);font-size:14px;font-weight:400;}
+
+  /* ---------- Radar (interactive) ---------- */
+  .viz-section{padding-top:18px;border-top:1px solid var(--border);margin-bottom:22px;}
+  .viz-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+  .viz-head .section-label{margin:0;}
+  .cmp{display:flex;align-items:center;gap:8px;margin:0;font-size:11px;}
+  .cmp select{background:var(--panel-2);color:var(--text);border:1px solid var(--border);border-radius:4px;font-family:var(--mono);font-size:11px;padding:4px 6px;max-width:210px;}
+  .radar-note{color:var(--faint);font-family:var(--mono);font-size:12px;padding:20px 0;text-align:center;line-height:1.6;}
+  .radar-svg{display:block;width:100%;max-width:440px;height:auto;margin:0 auto;overflow:visible;}
+  .radar-axis-label{font-family:var(--mono);font-size:11px;fill:var(--muted);pointer-events:all;cursor:default;}
+  .radar-axis-value{font-family:var(--mono);font-size:13px;font-weight:700;pointer-events:all;cursor:default;}
+  .ring-label{font-family:var(--mono);font-size:9px;fill:var(--faint);}
+  .radar-poly{animation:radarIn .6s cubic-bezier(.2,.8,.2,1);}
+  .radar-axis{animation:fadeIn .4s .4s both;cursor:default;}
+  .radar-axis .halo{opacity:0;transition:opacity .15s;}
+  .radar-axis .hl-spoke{stroke:transparent;transition:stroke .15s;}
+  .radar-axis.hl .halo,.radar-axis:hover .halo{opacity:.35;}
+  .radar-axis.hl .hl-spoke,.radar-axis:hover .hl-spoke{stroke:var(--muted);}
+  .radar-axis.hl .radar-axis-label,.radar-axis:hover .radar-axis-label{fill:var(--text);}
+  @keyframes radarIn{from{transform:scale(.05);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .axis-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:10px;}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted);background:var(--panel-2);border:1px solid var(--border);border-radius:99px;padding:4px 10px;cursor:default;transition:border-color .15s,color .15s;}
+  .chip i{width:8px;height:8px;border-radius:50%;display:inline-block;}
+  .chip b{color:var(--text);}
+  .chip.hl,.chip:hover{border-color:var(--muted);color:var(--text);}
+  .hint-line{font-family:var(--mono);font-size:10px;color:var(--faint);text-align:center;margin-top:10px;}
+  .tip{position:fixed;z-index:50;pointer-events:none;max-width:250px;background:#1a2331;border:1px solid var(--border);border-radius:6px;padding:10px 12px;font-size:12px;line-height:1.45;color:var(--muted);box-shadow:0 6px 20px rgba(0,0,0,.45);opacity:0;transition:opacity .12s;}
+  .tip.show{opacity:1;}
+  .tip strong{color:var(--text);font-family:var(--mono);font-size:12px;}
+  .tip .lv{font-family:var(--mono);font-size:11px;margin-left:6px;}
+  .tip .cmpv{display:block;margin-top:6px;font-family:var(--mono);font-size:11px;color:var(--faint);}
+
+  /* ---------- Score composition ---------- */
+  .contrib-block{padding-top:18px;border-top:1px solid var(--border);}
+  .contrib-row{display:grid;grid-template-columns:130px 1fr 52px;align-items:center;gap:12px;margin-bottom:10px;}
+  .contrib-label{font-family:var(--mono);font-size:12px;color:var(--muted);}
+  .contrib-weight{color:var(--faint);font-size:10px;}
+  .contrib-track{height:10px;background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;}
+  .contrib-fill{height:100%;transition:width .5s ease;}
+  .contrib-value{font-family:var(--mono);font-size:12px;font-weight:600;text-align:right;}
+  .contrib-final{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);}
+  .contrib-final .contrib-label{color:var(--text);font-weight:600;}
+
+  .meta-row{display:flex;gap:16px;font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+
+  @media (prefers-reduced-motion:reduce){
+    .radar-poly,.radar-axis{animation:none;}
+    .contrib-fill{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span class="dot" id="statusDot"></span>Reliability Engine — Test Console</h1>
+  <span class="endpoint" id="statusText" title="Click to recheck connection">POST /evaluate</span>
+</header>
+
+<main class="layout">
+
+  <!-- COLUMN 1: run evaluation -->
+  <section class="col">
+    <h2 class="col-title">Run evaluation</h2>
+    <div class="panel">
+      <div class="field">
+        <label for="promptInput">Prompt</label>
+        <textarea id="promptInput" placeholder="Ask something the model might not know for certain..."></textarea>
+      </div>
+      <div class="field">
+        <label for="referenceInput">Reference answer (optional)</label>
+        <input type="text" id="referenceInput" placeholder="Known correct answer, for similarity scoring">
+      </div>
+      <button class="run" id="runBtn">Run evaluation</button>
+      <div class="hint">Ctrl/⌘ + Enter to run · calls 127.0.0.1:8000/evaluate</div>
+    </div>
+
+    <div class="history-title">RECENT RUNS</div>
+    <div id="trendBlock"></div>
+    <div id="historyList"><div class="empty-history">No runs yet this session.</div></div>
+  </section>
+
+  <!-- COLUMN 2: answer + web evidence -->
+  <section class="col">
+    <h2 class="col-title">Answer &amp; web evidence</h2>
+    <div class="panel" id="webArea">
+      <div class="placeholder">The answer and the web sources behind it will appear here</div>
+    </div>
+  </section>
+
+  <!-- COLUMN 3: visuals -->
+  <section class="col">
+    <h2 class="col-title">Visuals</h2>
+    <div class="panel" id="vizArea">
+      <div class="placeholder">Scores and charts will appear here after a run</div>
+    </div>
+  </section>
+
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const BASE_URL = "http://127.0.0.1:8000";
+const API_URL = BASE_URL + "/evaluate";
+
+const $ = (id) => document.getElementById(id);
+const promptInput = $('promptInput'), referenceInput = $('referenceInput'), runBtn = $('runBtn');
+const webArea = $('webArea'), vizArea = $('vizArea');
+const historyList = $('historyList'), trendBlock = $('trendBlock');
+const statusDot = $('statusDot'), statusText = $('statusText'), tip = $('tip');
+
+let runs = [];              // { prompt, reference, data, time }
+let backendReachable = null;
+let currentData = null;     // result currently on screen
+let compareIdx = '';        // index into runs of the run overlaid on the radar
+let overlayMap = null;      // {axisKey: value} of the comparison run, if any
+
+runBtn.addEventListener('click', runEvaluation);
+promptInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) runEvaluation();
+});
+
+/* ---------- helpers ---------- */
+const isNum = (v) => typeof v === 'number' && !isNaN(v);
+const clamp01 = (v) => Math.min(1, Math.max(0, v));
+const fmtScore = (v) => isNum(v) ? v.toFixed(2) : 'N/A';
+function scoreClass(v){
+  if (!isNum(v)) return 'score-na';
+  return v < 0.4 ? 'score-red' : v < 0.7 ? 'score-yellow' : 'score-green';
+}
+const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function scoreColorHex(v){ return v < 0.4 ? cssVar('--red') : v < 0.7 ? cssVar('--yellow') : cssVar('--green'); }
+function levelLabel(v){ return v < 0.4 ? 'Low' : v < 0.7 ? 'Moderate' : 'High'; }
+function escapeHtml(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function domainFromUrl(url){ try { return new URL(url).hostname.replace(/^www\./,''); } catch { return ''; } }
+function safeHref(url){ return /^https?:\/\//i.test(url || '') ? url : '#'; }
+const truncate = (s, n) => s.length > n ? s.slice(0, n - 1) + '…' : s;
+
+/* ---------- connection check ---------- */
+async function checkBackend(){
+  statusDot.className = 'dot checking';
+  statusText.textContent = 'checking backend…';
+  try {
+    await fetch(BASE_URL, { method: 'GET', mode: 'cors' });
+    backendReachable = true;
+    statusDot.className = 'dot online';
+    statusText.textContent = 'backend reachable — POST /evaluate';
+  } catch {
+    backendReachable = false;
+    statusDot.className = 'dot offline';
+    statusText.textContent = 'backend unreachable';
+  }
+}
+checkBackend();
+statusText.addEventListener('click', checkBackend);
+
+/* ---------- run ---------- */
+async function runEvaluation(){
+  const prompt = promptInput.value.trim();
+  if (!prompt) { promptInput.focus(); return; }
+  const reference = referenceInput.value.trim() || null;
+
+  runBtn.disabled = true;
+  runBtn.textContent = 'Running…';
+  renderLoading();
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, reference })
+    });
+    if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+    const data = await res.json();
+    addToHistory(prompt, reference, data);
+    renderResults(data);
+  } catch (err) {
+    await checkBackend();
+    renderFetchError(err);
+  } finally {
+    runBtn.disabled = false;
+    runBtn.textContent = 'Run evaluation';
+  }
+}
+
+function renderLoading(){
+  webArea.innerHTML = `<div class="loading"><div class="spinner"></div><span>Querying the model and searching the web…</span></div>`;
+  vizArea.innerHTML = `<div class="loading"><div class="spinner"></div><span>Waiting for scores…</span></div>`;
+}
+
+function renderFetchError(err){
+  let cause, fix;
+  if (backendReachable === false) {
+    cause = "Nothing responded at 127.0.0.1:8000, or your browser can't reach it.";
+    fix = "Start the backend (e.g. <code>uvicorn api.main:app --reload</code>) and confirm it logs \"Uvicorn running on http://127.0.0.1:8000\". Then click the status text above to recheck.";
+  } else {
+    cause = "The backend answered a plain request, but this call still failed — that points to CORS rejecting the POST, not the server being down.";
+    fix = "Make sure <code>CORSMiddleware</code> is added in api/main.py with <code>allow_origins=[\"*\"]</code>, and restart the server after adding it.";
+  }
+  webArea.innerHTML = `
+    <div class="error-banner">
+      <strong>Couldn't reach the engine.</strong> ${cause}<br>${fix}
+      <br><span style="font-family:var(--mono);font-size:12px;opacity:.7;">${escapeHtml(err.message || String(err))}</span>
+    </div>`;
+  vizArea.innerHTML = `<div class="placeholder">No results to visualize</div>`;
+}
+
+/* ---------- read more ---------- */
+function clampBlock(cls, text, lines){
+  return `<div class="clamp ${cls}" style="--lines:${lines}">${escapeHtml(text)}</div><button class="more-btn" type="button" hidden>Read more</button>`;
+}
+function initReadMore(root){
+  root.querySelectorAll('.clamp').forEach(el => {
+    const btn = el.nextElementSibling;
+    if (!btn || !btn.classList.contains('more-btn')) return;
+    if (el.scrollHeight > el.clientHeight + 1) btn.hidden = false;
+    btn.addEventListener('click', () => {
+      const open = el.classList.toggle('open');
+      btn.textContent = open ? 'Show less' : 'Read more';
+    });
+  });
+}
+
+/* ---------- results: middle column ---------- */
+function renderResults(data){
+  currentData = data;
+  compareIdx = '';
+  overlayMap = null;
+  renderWeb(data);
+  renderViz(data);
+}
+
+function renderWeb(data){
+  if (data.generation_failed) {
+    webArea.innerHTML = `<div class="error-banner"><strong>The model failed to respond.</strong>&nbsp;Try again.</div>`;
+    return;
+  }
+  const declined = !!data.answer_declined;
+  const shown = data.response ?? data.fallback_answer ?? '(no answer returned)';
+  let html = '';
+
+  if (data.verification_failed) {
+    html += `<div class="error-banner warn"><strong>No usable evidence found on the web</strong> for this claim — treat the evidence-based metrics with caution.</div>`;
+  }
+
+  html += `
+    <div class="answer-block ${declined ? 'declined' : ''}">
+      ${declined ? `<div class="answer-flag">⚠ Model didn't know — answer sourced from the web</div>` : ''}
+      ${clampBlock('answer-text', shown, 8)}
+      ${declined && data.model_response ? `
+        <div class="model-said">
+          <span class="label">WHAT THE MODEL ACTUALLY SAID</span>
+          ${clampBlock('', data.model_response, 3)}
+        </div>` : ''}
+    </div>`;
+
+  const sources = Array.isArray(data.evidence_sources) ? data.evidence_sources : [];
+  html += `<p class="section-label">WEB EVIDENCE <span>· ${sources.length} source${sources.length === 1 ? '' : 's'}</span></p>`;
+  if (sources.length === 0) {
+    html += `<div class="no-evidence">No supporting sources found</div>`;
+  } else {
+    sources.forEach(src => {
+      const score = isNum(src.score) ? src.score : null;
+      html += `
+        <div class="evidence-card">
+          <div class="evidence-head">
+            <a href="${escapeHtml(safeHref(src.url))}" target="_blank" rel="noopener">${escapeHtml(src.url)}</a>
+            <span class="evidence-domain">${escapeHtml(domainFromUrl(src.url))}</span>
+          </div>
+          <div class="evidence-text">${clampBlock('', src.text ?? '', 3)}</div>
+          <div class="evidence-score">relevance ${fmtScore(score)}</div>
+          ${score === null ? '' : `<div class="evidence-bar-track"><div class="evidence-bar-fill" style="width:${Math.round(clamp01(score) * 100)}%;background:${scoreColorHex(score)};"></div></div>`}
+        </div>`;
+    });
+  }
+  webArea.innerHTML = html;
+  initReadMore(webArea);
+}
+
+/* ---------- results: right column (visuals) ---------- */
+function subScore(label, value){
+  const na = !isNum(value);
+  return `<div class="sub-score"><span class="s-label">${label.toUpperCase()}</span><span class="s-value ${na ? 'na' : ''}">${fmtScore(value)}</span></div>`;
+}
+function renderMetaRow(data){
+  return `<div class="meta-row"><span>samples used: ${data.samples_used ?? 'N/A'}/3</span></div>`;
+}
+
+const AXIS_DESC = {
+  Consistency: "How much the model's repeated answers agree with each other.",
+  Evidence: "How well the answer matches passages retrieved from the web.",
+  Groundedness: "1 − hallucination penalty. Higher means fewer contradictions with web evidence.",
+  Similarity: "How close the answer is to the reference answer you supplied."
+};
+// Only metrics that actually have a value become axes — a null is never drawn as 0.
+function axesFromData(d){
+  return [
+    { key: 'Consistency',  value: d.consistency },
+    { key: 'Evidence',     value: d.evidence },
+    { key: 'Groundedness', value: isNum(d.hallucination_penalty) ? 1 - d.hallucination_penalty : null },
+    { key: 'Similarity',   value: d.similarity },
+  ].filter(a => isNum(a.value)).map(a => ({ ...a, value: clamp01(a.value) }));
+}
+
+function renderViz(data){
+  if (data.generation_failed) {
+    vizArea.innerHTML = `<div class="radar-note">No visuals — generation failed, so no answer exists to score.</div>${renderMetaRow(data)}`;
+    return;
+  }
+  const axes = axesFromData(data);
+  const radarOk = !data.answer_declined && axes.length >= 3;
+  const others = runs.map((r, i) => ({ r, i })).filter(o =>
+    o.r.data !== data && !o.r.data.generation_failed && !o.r.data.answer_declined && axesFromData(o.r.data).length >= 3);
+
+  vizArea.innerHTML = `
+    <div class="metrics-grid">
+      <div class="score-dial ${scoreClass(data.final_score)}">
+        <div class="val">${fmtScore(data.final_score)}</div>
+        <div class="lbl">FINAL SCORE</div>
+      </div>
+      <div class="sub-scores">
+        ${subScore('Similarity', data.similarity)}
+        ${subScore('Evidence', data.evidence)}
+        ${subScore('Consistency', data.consistency)}
+        ${subScore('Hallucination', data.hallucination_penalty)}
+      </div>
+    </div>
+    <div class="viz-section">
+      <div class="viz-head">
+        <p class="section-label">RELIABILITY RADAR</p>
+        ${radarOk && others.length ? `
+          <label class="cmp">Compare with
+            <select id="cmpSelect">
+              <option value="">— none —</option>
+              ${others.map(o => `<option value="${o.i}">${escapeHtml(truncate(o.r.prompt, 26))} · ${fmtScore(o.r.data.final_score)}</option>`).join('')}
+            </select>
+          </label>` : ''}
+      </div>
+      <div id="radarHost"></div>
+    </div>
+    ${buildContributionChart(data)}
+    ${renderMetaRow(data)}`;
+
+  const sel = $('cmpSelect');
+  if (sel) sel.addEventListener('change', () => { compareIdx = sel.value; renderRadar(); });
+  renderRadar();
+}
+
+function renderRadar(){
+  const host = $('radarHost');
+  if (!host || !currentData) return;
+  const d = currentData;
+  if (d.answer_declined) {
+    host.innerHTML = `<div class="radar-note">No radar chart — the answer came from web evidence, not the model,<br>so there's no model behaviour to plot.</div>`;
+    return;
+  }
+  const axes = axesFromData(d);
+  if (axes.length < 3) {
+    host.innerHTML = `<div class="radar-note">Not enough scored metrics to plot a radar chart.</div>`;
+    return;
+  }
+
+  // Optional overlay of an earlier run — only if it has every axis this run has.
+  overlayMap = null;
+  let overlay = null, overlayNote = '';
+  if (compareIdx !== '' && runs[+compareIdx]) {
+    const map = Object.fromEntries(axesFromData(runs[+compareIdx].data).map(a => [a.key, a.value]));
+    if (axes.every(a => isNum(map[a.key]))) {
+      overlayMap = map;
+      overlay = axes.map(a => ({ key: a.key, value: map[a.key] }));
+    } else {
+      overlayNote = "That run is missing a metric this run has, so it can't be overlaid.";
+    }
+  }
+
+  host.innerHTML = `
+    ${buildRadarSVG(axes, overlay)}
+    <div class="axis-chips">
+      ${axes.map(a => `<span class="chip" data-axis="${a.key}"><i style="background:${scoreColorHex(a.value)}"></i>${a.key} <b>${a.value.toFixed(2)}</b></span>`).join('')}
+    </div>
+    ${overlayNote ? `<div class="radar-note" style="padding:10px 0 0">${overlayNote}</div>` : ''}
+    <div class="hint-line">Hover a point, label or chip for details${overlay ? ' · dashed outline = compared run' : ''}</div>`;
+}
+
+function buildRadarSVG(axes, overlay){
+  const size = 400, cx = size / 2, cy = size / 2, maxR = 92, labelR = maxR + 46;
+  const n = axes.length, step = (2 * Math.PI) / n, start = -Math.PI / 2;
+  const ang = (i) => start + i * step;
+  const pt = (i, f) => [cx + Math.cos(ang(i)) * maxR * f, cy + Math.sin(ang(i)) * maxR * f];
+  const border = cssVar('--border');
+
+  let grid = '';
+  [0.25, 0.5, 0.75, 1].forEach(f => {
+    grid += `<polygon points="${axes.map((_, i) => pt(i, f).join(',')).join(' ')}" fill="none" stroke="${border}" stroke-width="1"/>`;
+  });
+  axes.forEach((_, i) => { const [x, y] = pt(i, 1); grid += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="${border}"/>`; });
+  grid += `<text class="ring-label" x="${cx + 5}" y="${cy - maxR * 0.5 + 3}">0.5</text><text class="ring-label" x="${cx + 5}" y="${cy - maxR + 3}">1.0</text>`;
+
+  const avg = axes.reduce((s, a) => s + a.value, 0) / n;
+  const color = scoreColorHex(avg);
+  const floor = (v) => Math.max(v, 0.02); // keep a genuine 0.00 visible instead of collapsing to the centre
+  const poly = axes.map((a, i) => pt(i, floor(a.value)).join(',')).join(' ');
+
+  let over = '';
+  if (overlay) {
+    const op = overlay.map((a, i) => pt(i, floor(a.value)).join(',')).join(' ');
+    over = `<polygon points="${op}" fill="none" stroke="${cssVar('--muted')}" stroke-width="1.5" stroke-dasharray="5 4"/>` +
+      overlay.map((a, i) => { const [x, y] = pt(i, floor(a.value)); return `<circle cx="${x}" cy="${y}" r="3" fill="${cssVar('--panel')}" stroke="${cssVar('--muted')}" stroke-width="1.5"/>`; }).join('');
+  }
+
+  const axisSvg = axes.map((a, i) => {
+    const [vx, vy] = pt(i, floor(a.value));
+    const [sx, sy] = pt(i, 1);
+    const c = scoreColorHex(a.value);
+    const lx = cx + Math.cos(ang(i)) * labelR, ly = cy + Math.sin(ang(i)) * labelR;
+    const cosA = Math.cos(ang(i));
+    const anchor = cosA > 0.3 ? 'start' : cosA < -0.3 ? 'end' : 'middle';
+    return `
+      <g class="radar-axis" data-axis="${a.key}">
+        <line class="hl-spoke" x1="${cx}" y1="${cy}" x2="${sx}" y2="${sy}" stroke-width="2"/>
+        <circle class="halo" cx="${vx}" cy="${vy}" r="13" fill="${c}"/>
+        <circle cx="${vx}" cy="${vy}" r="4.5" fill="${c}" stroke="${cssVar('--bg')}" stroke-width="1.5"/>
+        <circle cx="${vx}" cy="${vy}" r="18" fill="transparent"/>
+        <text class="radar-axis-label" x="${lx}" y="${ly - 4}" text-anchor="${anchor}">${a.key}</text>
+        <text class="radar-axis-value" x="${lx}" y="${ly + 12}" text-anchor="${anchor}" fill="${c}">${a.value.toFixed(2)}</text>
+      </g>`;
+  }).join('');
+
+  return `<svg class="radar-svg" viewBox="0 0 ${size} ${size}" role="img" aria-label="Radar chart of reliability metrics">
+    ${grid}
+    <g class="radar-poly" style="transform-origin:${cx}px ${cy}px">
+      ${over}
+      <polygon points="${poly}" fill="${color}" fill-opacity="0.22" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+    </g>
+    ${axisSvg}
+  </svg>`;
+}
+
+/* Mirrors weighted_reliability() in api/main.py so the breakdown matches how the score was computed.
+   If you change the backend weights, update the numbers below. */
+function buildContributionChart(data){
+  if (!isNum(data.final_score)) return '';
+  const sim = data.similarity, evid = data.evidence, cons = data.consistency, hpen = data.hallucination_penalty;
+  let comps = [];
+  if (isNum(sim)) {
+    comps.push({ label: 'Similarity', value: sim, weight: 0.35, color: cssVar('--accent') });
+    comps.push({ label: 'Evidence', value: evid, weight: 0.35, color: '#5b9bd6' });
+  } else {
+    comps.push({ label: 'Evidence', value: evid, weight: 0.60, color: cssVar('--accent') });
+  }
+  if (isNum(cons)) comps.push({ label: 'Consistency', value: cons, weight: isNum(sim) ? 0.30 : 0.40, color: '#9b7fd4' });
+  comps = comps.filter(c => isNum(c.value));
+  if (!comps.length) return '';
+
+  const totalW = comps.reduce((s, c) => s + c.weight, 0);
+  comps.forEach(c => { c.share = c.weight / totalW; c.contribution = c.value * c.share; });
+  const penalty = isNum(hpen) ? 0.30 * hpen : 0;
+  const fc = scoreColorHex(data.final_score), red = cssVar('--red');
+
+  const rows = comps.map(c => `
+    <div class="contrib-row">
+      <span class="contrib-label">${c.label} <span class="contrib-weight">×${c.share.toFixed(2)}</span></span>
+      <div class="contrib-track"><div class="contrib-fill" style="width:${(clamp01(c.contribution) * 100).toFixed(1)}%;background:${c.color};"></div></div>
+      <span class="contrib-value">${c.contribution.toFixed(2)}</span>
+    </div>`).join('');
+
+  return `
+    <div class="contrib-block">
+      <p class="section-label">HOW THE FINAL SCORE WAS BUILT</p>
+      ${rows}
+      <div class="contrib-row">
+        <span class="contrib-label">Hallucination penalty</span>
+        <div class="contrib-track"><div class="contrib-fill" style="width:${(clamp01(penalty) * 100).toFixed(1)}%;background:${red};"></div></div>
+        <span class="contrib-value" style="color:${red}">−${penalty.toFixed(2)}</span>
+      </div>
+      <div class="contrib-row contrib-final">
+        <span class="contrib-label">Final score</span>
+        <div class="contrib-track"><div class="contrib-fill" style="width:${(clamp01(data.final_score) * 100).toFixed(1)}%;background:${fc};"></div></div>
+        <span class="contrib-value" style="color:${fc}">${data.final_score.toFixed(2)}</span>
+      </div>
+    </div>`;
+}
+
+/* ---------- radar hover / tooltip ---------- */
+function clearHighlights(){ document.querySelectorAll('.hl').forEach(el => el.classList.remove('hl')); }
+function showTip(key, e){
+  const a = currentData ? axesFromData(currentData).find(x => x.key === key) : null;
+  if (!a) return;
+  const c = scoreColorHex(a.value);
+  const cmp = overlayMap && isNum(overlayMap[key])
+    ? `<span class="cmpv">Compared run: ${overlayMap[key].toFixed(2)} (${a.value - overlayMap[key] >= 0 ? '+' : '−'}${Math.abs(a.value - overlayMap[key]).toFixed(2)})</span>` : '';
+  tip.innerHTML = `<strong>${key} ${a.value.toFixed(2)}</strong><span class="lv" style="color:${c}">${levelLabel(a.value)}</span><br>${AXIS_DESC[key] || ''}${cmp}`;
+  tip.classList.add('show');
+  moveTip(e);
+}
+function moveTip(e){
+  const pad = 14, r = tip.getBoundingClientRect();
+  let x = e.clientX + pad, y = e.clientY + pad;
+  if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - pad;
+  if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+  tip.style.left = Math.max(8, x) + 'px';
+  tip.style.top = Math.max(8, y) + 'px';
+}
+document.addEventListener('mouseover', (e) => {
+  const t = e.target.closest && e.target.closest('[data-axis]');
+  clearHighlights();
+  if (!t) { tip.classList.remove('show'); return; }
+  const key = t.dataset.axis;
+  document.querySelectorAll(`[data-axis="${key}"]`).forEach(el => el.classList.add('hl'));
+  showTip(key, e);
+});
+document.addEventListener('mousemove', (e) => {
+  if (tip.classList.contains('show')) moveTip(e);
+});
+document.addEventListener('mouseout', (e) => {
+  if (!(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-axis]'))) {
+    clearHighlights();
+    tip.classList.remove('show');
+  }
+});
+
+/* ---------- history ---------- */
+function addToHistory(prompt, reference, data){
+  runs.unshift({ prompt, reference, data, time: new Date() });
+  runs = runs.slice(0, 8);
+  renderHistory();
+}
+
+function buildTrendSparkline(){
+  const ordered = [...runs].reverse();
+  const scores = ordered.map(r => r.data.generation_failed ? null : r.data.final_score);
+  if (scores.filter(isNum).length < 2) return '';
+  const w = 300, h = 44, pad = 6, stepX = (w - pad * 2) / (scores.length - 1);
+  const pts = scores.map((v, i) => ({ x: pad + i * stepX, y: isNum(v) ? (h - pad) - clamp01(v) * (h - pad * 2) : null, v }));
+  let path = '', drawing = false;
+  pts.forEach(p => {
+    if (p.y === null) { drawing = false; return; }   // break the line across a failed / unscored run
+    path += (drawing ? ' L ' : 'M ') + p.x.toFixed(1) + ' ' + p.y.toFixed(1);
+    drawing = true;
+  });
+  const dots = pts.map(p => p.y === null ? '' : `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="${scoreColorHex(p.v)}"/>`).join('');
+  return `<div class="trend-block"><p class="section-label" style="margin-bottom:6px">RELIABILITY TREND</p>
+    <svg viewBox="0 0 ${w} ${h}"><path d="${path}" fill="none" stroke="${cssVar('--muted')}" stroke-width="1.5"/>${dots}</svg></div>`;
+}
+
+function renderHistory(){
+  trendBlock.innerHTML = buildTrendSparkline();
+  if (!runs.length) { historyList.innerHTML = `<div class="empty-history">No runs yet this session.</div>`; return; }
+  historyList.innerHTML = runs.map((r, i) => {
+    const failed = r.data.generation_failed;
+    return `<div class="history-item" data-idx="${i}">
+      <div class="h-prompt">${escapeHtml(r.prompt)}</div>
+      <div class="h-meta">
+        <span class="h-score ${failed ? 'score-red' : ''}" style="color:${failed ? cssVar('--red') : (isNum(r.data.final_score) ? scoreColorHex(r.data.final_score) : cssVar('--faint'))}">${failed ? 'FAILED' : fmtScore(r.data.final_score)}</span>
+        <span class="h-time">${r.time.toLocaleTimeString()}</span>
+      </div></div>`;
+  }).join('');
+  historyList.querySelectorAll('.history-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const r = runs[parseInt(el.dataset.idx, 10)];
+      promptInput.value = r.prompt;
+      referenceInput.value = r.reference || '';
+      renderResults(r.data);
+    });
+  });
+}
+</script>
+</body>
+</html>
